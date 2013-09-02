@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,13 +19,13 @@ public class MainExample {
 
     public static void main(String[] args){
         final long timeout=1000*60*60*
-                4; //hours
+                64; //hours
         String url="jdbc:mysql://localhost/adbcjtck";
         String user="adbcjtck";
         String password="adbcjtck";
         DruidDataSource druidDataSource=new DruidDataSource();
-        String driver="com.mysql.jdbc.Driver";
-        //String driver="org.adbcj.dbcj.Driver";
+        //String driver="com.mysql.jdbc.Driver";
+        String driver="org.adbcj.dbcj.Driver";
         druidDataSource.setDriverClassName(driver);
         druidDataSource.setUrl(url);
         druidDataSource.setUsername(user);
@@ -67,10 +71,25 @@ public class MainExample {
 
         } catch (Exception e){
             e.printStackTrace();
+            output(e.toString());
         }
 
 
 
+
+
+    }
+    private static void output(String res){
+        try{
+            FileChannel out=new FileOutputStream(new File("d:\\exception.txt"),true).getChannel();
+            ByteBuffer buf=ByteBuffer.allocate(1024);
+            byte[] b=res.getBytes();
+            buf.put(b);
+            buf.flip();
+            out.write(buf);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
     }
